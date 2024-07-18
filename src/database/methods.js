@@ -62,6 +62,7 @@ export const addPatient=async (newPatient) =>{
     try {
         await addDoc(collection(db, 'patientinfo'), newPatient);
     } 
+    
      catch (error) {
         
     }
