@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Button, Nav, NavItem } from "reactstrap";
 import Logo from "./Logo";
 import { Link, useLocation } from "react-router-dom";
@@ -28,50 +29,51 @@ const navigation = [
     href: "/cards",
     icon: "bi bi-card-text",
   },
-  // {
-  //   title: "Grid",
-  //   href: "/grid",
-  //   icon: "bi bi-columns",
-  // },
-  // {
-  //   title: "Table",
-  //   href: "/table",
-  //   icon: "bi bi-layout-split",
-  // },
-  // {
-  //   title: "Forms",
-  //   href: "/forms",
-  //   icon: "bi bi-textarea-resize",
-  // },
-  // {
-  //   title: "Breadcrumbs",
-  //   href: "/breadcrumbs",
-  //   icon: "bi bi-link",
-  // },
-  // {
-  //   title: "About",
-  //   href: "/about",
-  //   icon: "bi bi-people",
-  // },
+  {
+    title: "ABC Therapy Center",
+    href: "#",
+    icon: "bi bi-columns",
+    submenu: [
+      {
+        title: "All Therapists",
+        href: "/alltherapists",
+      },
+      {
+        title: "All Patients",
+        href: "/allpatients",
+      },
+      {
+        title: "All Techniques",
+        href: "/alltechniques",
+      },
+    ],
+  },
 ];
 
 const Sidebar = () => {
+  const [isSubmenuOpen, setIsSubmenuOpen] = useState(false);
+
   const showMobilemenu = () => {
     document.getElementById("sidebarArea").classList.toggle("showSidebar");
   };
+
   let location = useLocation();
+
+  const toggleSubmenu = () => {
+    setIsSubmenuOpen(!isSubmenuOpen);
+  };
 
   return (
     <div className="p-3">
       <div className="d-flex align-items-center">
         <Logo />
         <span className="ms-auto d-lg-none">
-        <Button
-          close
-          size="sm"
-          className="ms-auto d-lg-none"
-          onClick={() => showMobilemenu()}
-        ></Button>
+          <Button
+            close
+            size="sm"
+            className="ms-auto d-lg-none"
+            onClick={() => showMobilemenu()}
+          ></Button>
         </span>
       </div>
       <div className="pt-4 mt-2">
@@ -85,10 +87,31 @@ const Sidebar = () => {
                     ? "text-primary nav-link py-3"
                     : "nav-link text-secondary py-3"
                 }
+                onClick={navi.submenu ? toggleSubmenu : undefined}
               >
                 <i className={navi.icon}></i>
                 <span className="ms-3 d-inline-block">{navi.title}</span>
               </Link>
+              {navi.submenu && isSubmenuOpen && (
+                <Nav className="ps-4">
+                  {navi.submenu.map((submenu, subIndex) => (
+                    <NavItem key={subIndex} className="sidenav-bg">
+                      <Link
+                        to={submenu.href}
+                        className={
+                          location.pathname === submenu.href
+                            ? "text-primary nav-link py-2"
+                            : "nav-link text-secondary py-2"
+                        }
+                      >
+                        <span className="ms-3 d-inline-block">
+                          {submenu.title}
+                        </span>
+                      </Link>
+                    </NavItem>
+                  ))}
+                </Nav>
+              )}
             </NavItem>
           ))}
         </Nav>

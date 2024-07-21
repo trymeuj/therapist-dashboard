@@ -9,13 +9,16 @@ import {
   MDBCardImage,
 } from "mdb-react-ui-kit";
 import { Button, Col, Row, Table, Card, CardTitle, CardBody } from "reactstrap";
-import axios from "axios"; // if you are using axios
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 import userpic from "./my_pic.jpg";
 
 const ProfilePage = () => {
   const [showHomeworkTable, setShowHomeworkTable] = useState(false);
   const [showReportTables, setShowReportTables] = useState(false);
   const [showFullProfile, setShowFullProfile] = useState(false);
+  const navigate = useNavigate();
+
   const [homeworkData, setHomeworkData] = useState([]);
   const [addMoreData, setAddMoreData] = useState([
     { id: 4, firstName: "John", lastName: "Doe", username: "@jdoe" },
@@ -57,6 +60,10 @@ const ProfilePage = () => {
   const toggleReportTables = () => {
     setShowReportTables(!showReportTables);
     setShowHomeworkTable(false);
+  };
+
+  const handleFeeDetailsClick = () => {
+    navigate("/feedetail");
   };
 
   const addToHomework = (item) => {
@@ -172,6 +179,14 @@ const ProfilePage = () => {
               onClick={toggleReportTables}
             >
               See Report
+            </Button>
+            <Button
+              className="btn"
+              outline
+              color="danger"
+              onClick={handleFeeDetailsClick}
+            >
+              Fee Details
             </Button>
           </CardBody>
         </Card>
@@ -339,6 +354,7 @@ const ProfilePage = () => {
             </Col>
           </>
         )}
+        
         <Col lg="12" className="mb-4">
           <Card>
             <CardTitle tag="h6" className="border-bottom p-3 mb-0">

@@ -19,7 +19,11 @@ const Tables = lazy(() => import("../views/ui/Tables"));
 const Forms = lazy(() => import("../views/ui/Forms"));
 const Breadcrumbs = lazy(() => import("../views/ui/Breadcrumbs"));
 const ProfilePage  = lazy(() => import("../views/ui/ProfilePage.js"));
-
+const AllTherapists = lazy(() => import("../views/ui/Alltherapists.js"));
+const AllPatients = lazy(() => import("../views/ui/Allpatients.js"));
+const AllTechniques = lazy(() => import("../views/ui/Alltechniques.js"));
+const Contributions = lazy(() => import("../views/ui/Contributions.js"));
+const Feedetail = lazy(() => import("../views/ui/Feedetail.js"));
 /*****Routes******/
 
 const ThemeRoutes = [
@@ -40,6 +44,11 @@ const ThemeRoutes = [
       { path: "/breadcrumbs", exact: true, element: <Breadcrumbs /> },
       { path: "/userprofile" ,exact: true, element: <ProfilePage />},
       {path: "/signup", exact: true, element: <SignupForm/>},
+      {path: "/alltherapists", exact: true, element: <AllTherapists/>},
+      {path: "/allpatients", exact: true, element: <AllPatients/>},
+      {path: "/alltechniques", exact: true, element: <AllTechniques/>},
+      {path: "/contributions", exact: true, element: <Contributions/>},
+      {path: "/feedetail", exact: true, element: <Feedetail/>},
     ],
   },
 ];
