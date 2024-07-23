@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Container, Row, Col, Button, Card, CardBody, Table, Modal, ModalHeader, ModalBody, FormGroup, Label, Input } from "reactstrap";
 import { Link } from "react-router-dom";
+import { getPatientsOfTherapyCenter } from "../../database/methods";
 
 const AllPatients = () => {
   const [modal, setModal] = useState(false);
-
+  const [ps, setPatients] = useState([]);
   const toggleModal = () => setModal(!modal);
 
   // Dummy patient data with therapist info
@@ -20,6 +21,16 @@ const AllPatients = () => {
     { num: 9, name: "Anil", batch: "Batch 1 (MWF)", time: "8-9", therapist: "Dr. Vidha" },
     { num: 10, name: "Sunil", batch: "Batch 2 (TTS)", time: "9-10", therapist: "Dr. Kumar" },
   ];
+  useEffect(() => {
+    const fetchData=async()=>{
+      getPatientsOfTherapyCenter('EQCduhED0aOQz4jQ2KWP').then((data)=>{
+      console.log(data)
+        setPatients(data)
+      })
+    }
+    fetchData()
+
+  },[])
 
   return (
     <Container className="mt-5">
@@ -52,9 +63,9 @@ const AllPatients = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {patients.map((item, index) => (
-                    <tr key={item.num}>
-                      <td>{item.num}</td>
+                  {ps.map((item, index) => (
+                    <tr key={index+1}>
+                      <td>{index+1}</td>
                       <td>
                         <Link to={`/userprofile`}>{item.name}</Link>
                       </td>

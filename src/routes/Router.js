@@ -2,6 +2,7 @@ import { lazy } from "react";
 import { Navigate } from "react-router-dom";
 import LoginForm from "../views/ui/Cards";
 import SignupForm from "../views/ui/Signup.js";
+import ProtectedRoute from "../protectedRoute.js";
 
 /****Layouts*****/
 const FullLayout = lazy(() => import("../layouts/FullLayout.js"));
@@ -12,7 +13,7 @@ const Starter = lazy(() => import("../views/Starter.js"));
 const About = lazy(() => import("../views/About.js"));
 const Alerts = lazy(() => import("../views/ui/Alerts"));
 const Badges = lazy(() => import("../views/ui/Badges"));
-const Buttons = lazy(() => import("../views/ui/Buttons"));
+const TherapistProfile = lazy(() => import("../views/ui/Buttons"));
 const Cards = lazy(() => import("../views/ui/Cards"));
 const Grid = lazy(() => import("../views/ui/Grid"));
 const Tables = lazy(() => import("../views/ui/Tables"));
@@ -31,24 +32,25 @@ const ThemeRoutes = [
     path: "/",
     element: <FullLayout />,
     children: [
-      { path: "/", element: <Navigate to="/starter" /> },
-      { path: "/starter", exact: true, element: <Starter /> },
-      { path: "/about", exact: true, element: <About /> },
-      { path: "/alerts", exact: true, element: <Alerts /> },
-      { path: "/badges", exact: true, element: <Badges /> },
-      { path: "/buttons", exact: true, element: <Buttons /> },
-      { path: "/cards", exact: true, element: <LoginForm /> },
-      { path: "/grid", exact: true, element: <Grid /> },
-      { path: "/table", exact: true, element: <Tables /> },
-      { path: "/forms", exact: true, element: <Forms /> },
-      { path: "/breadcrumbs", exact: true, element: <Breadcrumbs /> },
-      { path: "/userprofile" ,exact: true, element: <ProfilePage />},
-      {path: "/signup", exact: true, element: <SignupForm/>},
-      {path: "/alltherapists", exact: true, element: <AllTherapists/>},
-      {path: "/allpatients", exact: true, element: <AllPatients/>},
-      {path: "/alltechniques", exact: true, element: <AllTechniques/>},
-      {path: "/contributions", exact: true, element: <Contributions/>},
-      {path: "/feedetail", exact: true, element: <Feedetail/>},
+      { path: '', element: <Navigate to="starter" /> },
+      { path: 'starter', element: <ProtectedRoute element={Starter} /> },
+      { path: 'patients', element: <ProtectedRoute element={Starter} /> },
+      { path: 'about', element: <ProtectedRoute element={About} /> },
+      { path: 'exercises', element: <ProtectedRoute element={Alerts} /> },
+      { path: 'timetable', element: <ProtectedRoute element={Badges} /> },
+      { path: 'profile', element: <ProtectedRoute element={TherapistProfile} /> },
+      { path: 'login', element: <LoginForm /> },
+      { path: 'grid', element: <ProtectedRoute element={Grid} /> },
+      { path: 'table', element: <ProtectedRoute element={Tables} /> },
+      { path: 'forms', element: <ProtectedRoute element={Forms} /> },
+      { path: 'breadcrumbs', element: <ProtectedRoute element={Breadcrumbs} /> },
+      { path: 'userprofile', element: <ProtectedRoute element={ProfilePage} /> },
+      { path: 'signup', element: <SignupForm /> },
+      { path: 'alltherapists', element: <ProtectedRoute element={AllTherapists} /> },
+      { path: 'allpatients', element: <ProtectedRoute element={AllPatients} /> },
+      { path: 'alltechniques', element: <ProtectedRoute element={AllTechniques} /> },
+      { path: 'contributions', element: <ProtectedRoute element={Contributions} /> },
+      { path: 'feedetail', element: <ProtectedRoute element={Feedetail} /> },
     ],
   },
 ];

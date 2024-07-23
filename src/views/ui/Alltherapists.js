@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Container, Row, Col, Button, Card, CardBody, Table, Modal, ModalHeader, ModalBody, FormGroup, Label, Input } from "reactstrap";
 import { useNavigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
+import { getTherapistsOfTherapyCenter } from "../../database/methods";
 
 // Sample data for doctors
 const doctors = [
@@ -19,14 +20,24 @@ const doctors = [
 
 const AllTherapists = () => {
   const [filterModal, setFilterModal] = useState(false);
+  const [therapists,setTherapists]=useState([]) 
   const navigate = useNavigate();
 
   const toggleFilterModal = () => setFilterModal(!filterModal);
 
-  const handleSeeProfile = () => {
-    navigate(`/buttons`);
+  const handleSeeProfile = (id) => {
+    navigate(`/therapist/${id}`);
   };
+  useEffect(() => {
+    const fetchData=async()=>{
+      getTherapistsOfTherapyCenter('EQCduhED0aOQz4jQ2KWP').then((data)=>{
+      console.log(data)
+        setTherapists(data)
+      })
+    }
+    fetchData()
 
+  },[])
   return (
     <Container className="mt-5">
       <Row className="text-center mb-4">
@@ -58,7 +69,7 @@ const AllTherapists = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {doctors.map((doctor, index) => (
+                  {therapists.map((doctor, index) => (
                     <tr key={doctor.id}>
                       <td>{index + 1}</td>
                       <td>

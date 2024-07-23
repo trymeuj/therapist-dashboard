@@ -10,20 +10,27 @@ import {
   Input,
   Card,
   CardBody,
+  Spinner,
 } from "reactstrap";
+import { signUp } from "../../database/methods";
 
 const SignupForm = () => {
+  const [loading,setLoading] = useState(false);
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
     name: "",
+    email:"",
     phone: "",
     gender: "",
     city: "",
-    registrationNumber: "",
-    registrationYear: "",
+    registration_No: "",
+    registration_year: "",
+    profile:'',
     qualification: "",
     college: "",
     experience: "",
+    batches:[],
+    patients:[]
   });
 
   const handleChange = (e) => {
@@ -62,6 +69,17 @@ const SignupForm = () => {
                       id="name"
                       placeholder="Enter your name"
                       value={formData.name}
+                      onChange={handleChange}
+                    />
+                  </FormGroup>
+                  <FormGroup>
+                    <Label for="email">Email</Label>
+                    <Input
+                      type="text"
+                      name="email"
+                      id="email"
+                      placeholder="Enter your email"
+                      value={formData.email}
                       onChange={handleChange}
                     />
                   </FormGroup>
@@ -195,11 +213,28 @@ const SignupForm = () => {
                       onChange={handleChange}
                     />
                   </FormGroup>
+                  <FormGroup>
+                    <Label for="password">Password (more than 6 characters)</Label>
+                    <Input
+                      type="text"
+                      name="password"
+                      id="password"
+                      placeholder="Enter your password"
+                      value={formData.password}
+                      onChange={handleChange}
+                    />
+                  </FormGroup>
                   <Button color="secondary" onClick={prevStep}>
                     Back
                   </Button>
-                  <Button color="primary" type="submit">
-                    Submit
+                  <Button color="primary" type="submit" onClick={async ()=>{
+                    setLoading(true);
+                     signUp(formData,formData.email,formData.password).then(()=>{
+                      setLoading(false);
+                      
+                     });
+                  }}>
+                    {loading?<Spinner color="primary" />:"Submit"}
                   </Button>
                 </Form>
               )}

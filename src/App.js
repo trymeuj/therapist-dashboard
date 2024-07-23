@@ -1,10 +1,17 @@
-import { useRoutes } from "react-router-dom";
+import { BrowserRouter, useRoutes } from "react-router-dom";
 import Themeroutes from "./routes/Router";
 
 const App = () => {
-  const routing = useRoutes(Themeroutes);
+  const AppRoutes = () => {
+    const routing = useRoutes(Themeroutes);
+    return routing;
+  };
 
-  return <div className="dark">{routing}</div>;
+  return <BrowserRouter>
+  <div className="dark">
+    <AppRoutes />
+  </div>
+</BrowserRouter>;
 };
 
 export default App;

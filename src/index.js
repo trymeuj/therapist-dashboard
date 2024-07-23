@@ -6,15 +6,18 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { HashRouter } from "react-router-dom";
 import Loader from "./layouts/loader/Loader";
+import { AuthProvider } from "./AuthContext";
 
 const rootElement = document.getElementById('root');
 const root = createRoot(rootElement);
 
 root.render(
   <Suspense fallback={<Loader />}>
-    <HashRouter>
+    <AuthProvider>
+
       <App />
-    </HashRouter>
+    </AuthProvider>
+  
   </Suspense>,
 
   // document.getElementById("root")

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Container,
   Row,
@@ -8,31 +8,39 @@ import {
   CardText,
 } from "reactstrap";
 import ProjectTables from "../../components/dashboard/ProjectTable";
+import { useAuth } from "../../AuthContext";
 
-const Buttons = () => {
+const TherapistProfile = () => {
   const [showMoreDetails, setShowMoreDetails] = useState(false);
+  const {currentUser}=useAuth()
+  console.log(currentUser)
+  const [profileData,setTherapist]=useState({})
 
+  useEffect(()=>{
+    setTherapist({...currentUser,image:"https://via.placeholder.com/150"})
+  },[])
+  
   const toggleDetails = () => {
     setShowMoreDetails(!showMoreDetails);
   };
 
   // Dummy data
-  const profileData = {
-    image: "https://via.placeholder.com/150",
-    name: "John Doe",
-    phoneNumber: "123-456-7890",
-    gender: "Male",
-    city: "San Francisco",
-    registrationNumber: "12345",
-    therapyCenter: "XYZ Therapy Center",
-    numPatients: 50,
-    additionalInfo: {
-      registrationYear: "2010",
-      qualification: "MD",
-      college: "ABC Medical College",
-      experience: "10 years",
-    },
-  };
+  // const profileData = {
+  //   image: "https://via.placeholder.com/150",
+  //   name: "John Doe",
+  //   phoneNumber: "123-456-7890",
+  //   gender: "Male",
+  //   city: "San Francisco",
+  //   registrationNumber: "12345",
+  //   therapyCenter: "XYZ Therapy Center",
+  //   numPatients: 50,
+  //   additionalInfo: {
+  //     registrationYear: "2010",
+  //     qualification: "MD",
+  //     college: "ABC Medical College",
+  //     experience: "10 years",
+  //   },
+  // };
 
   // Dummy patient data
   const patients = [
@@ -50,7 +58,7 @@ const Buttons = () => {
             <Col md="4" className="text-center">
               <div style={{ position: "sticky", top: "20px" }}>
                 <img
-                  src={profileData.image}
+                  src={profileData?profileData.image:""}
                   alt="Profile"
                   className="img-fluid"
                 />
@@ -62,17 +70,17 @@ const Buttons = () => {
                 <Button color="primary">See Schedule</Button>
               </div>
               <CardText>Name: {profileData.name}</CardText>
-              <CardText>Phone Number: {profileData.phoneNumber}</CardText>
+              <CardText>Phone Number: {profileData.phone}</CardText>
               <CardText>Gender: {profileData.gender}</CardText>
               <CardText>City: {profileData.city}</CardText>
               <CardText>
-                Registration Number: {profileData.registrationNumber}
+                Registration Number: {profileData.registration_No}
               </CardText>
               <CardText>
-                Therapy Center: {profileData.therapyCenter}
+                Therapy Center: {profileData.therapy_center}
               </CardText>
               <CardText>
-                Number of Patients: {profileData.numPatients}
+                Number of Patients: {profileData.patients? profileData.patients.length:0}
               </CardText>
               <Button color="primary" onClick={toggleDetails}>
                 {showMoreDetails ? "Hide Details" : "See More Details"}
@@ -81,16 +89,16 @@ const Buttons = () => {
                 <div className="mt-4">
                   <CardTitle tag="h5">Additional Information</CardTitle>
                   <CardText>
-                    Registration Year: {profileData.additionalInfo.registrationYear}
+                    Registration Year: {profileData.registration_year}
                   </CardText>
                   <CardText>
-                    Qualification: {profileData.additionalInfo.qualification}
+                    Qualification: {profileData.qualification}
                   </CardText>
                   <CardText>
-                    College: {profileData.additionalInfo.college}
+                    College: {profileData.college}
                   </CardText>
                   <CardText>
-                    Experience: {profileData.additionalInfo.experience}
+                    Experience: {profileData.experience}
                   </CardText>
                 </div>
               )}
@@ -110,4 +118,4 @@ const Buttons = () => {
   );
 };
 
-export default Buttons;
+export default TherapistProfile;

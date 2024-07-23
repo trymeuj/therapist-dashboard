@@ -1,10 +1,11 @@
 
 
 export class Therapist{
-    constructor(uid,name,phone,gender,city,registration_No,therapy_center,profile,registration_year,qualification,college,experience,patients){
+    constructor(uid,name,email,phone,gender,city,registration_No,therapy_center,profile,registration_year,qualification,college,experience,patients,batches){
         this.name=name;
         this.uid=uid
         this.phone=phone;
+        this.email=email;
         this.gender=gender;
         this.city=city;
         this.registration_No=registration_No;
@@ -15,16 +16,17 @@ export class Therapist{
         this.college=college;
         this.experience=experience
         this.patients=patients
+        this.batches=batches
 
     }
     static fromFireStore(doc){
         const data=doc.data()
-        return new Therapist(doc.id,data.name,data.phone,data.gender,data.city,data.registration_No,data.therapy_center,data.profile,data.registration_year,data.qualification,data.college,data.experience,data.patients)
+        return new Therapist(doc.id,data.name,data.email,data.phone,data.gender,data.city,data.registration_No,data.therapy_center,data.profile,data.registration_year,data.qualification,data.college,data.experience,data.patients,data.batches)
     }
 }
 
 export class Patient{
-    constructor(uid,name,dob,doj,address,remarks,parentPhone,parentNames,profile,batch,time){
+    constructor(uid,name,dob,doj,address,remarks,parentPhone,parentNames,profile,batch,time,therapist){
         this.name=name
         this.dob=dob
         this.uid=uid
@@ -36,25 +38,29 @@ export class Patient{
         this.profile=profile
         this.batch=batch
         this.time=time
+        this.therapist=therapist
 
     }
     static fromFireStore(doc){
         const data=doc.data()
-        return new Patient(doc.id,data.name,data.dob,data.doj,data.address,data.remarks,data.parentPhone,data.parentNames,data.profile,data.batch,data.time)
+        return new Patient(doc.id,data.name,data.dob,data.doj,data.address,data.remarks,data.parentsMobile,data.parentsName,data.profile,data.batch,data.time,data.therapist)
     }
 }
 
 export class TherapyCenter{
-    constructor(uid,name,patients,therapists){
+    constructor(uid,name,email,phone,password,patients,therapists){
         this.uid=uid
         this.name=name
         this.patients=patients
         this.therapists=therapists
+        this.email=email
+        this.phone=phone
+        this.password=password
     }
 
     static fromFireStore(doc){
         const data=doc.data()
-        return new TherapyCenter(doc.id,data.name,data.patients,data.therapists)
+        return new TherapyCenter(doc.id,data.name,data.email,data.phone,data.password,data.patients,data.therapists)
     }
 }
 export class Fee{

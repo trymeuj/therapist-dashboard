@@ -3,9 +3,15 @@ import { Col, Row, Button, Modal, ModalHeader, ModalBody, ModalFooter, Form, For
 import ProjectTables from "../components/dashboard/ProjectTable";
 import { db } from "../firebase";  // Import Firestore
 import { collection, getDocs, addDoc, writeBatch, doc } from 'firebase/firestore';
+import { useAuth } from "../AuthContext";
+import { setCurrentScreen } from "firebase/analytics";
+import { getPatientsByIds } from "../database/methods";
+import { set } from "firebase/database";
 
 const Starter = () => {
   const [modal, setModal] = useState(false);
+  const {currentUser}=useAuth()
+  const [patients,setPatients]=useState([])
   const [newPerson, setNewPerson] = useState({
     name: "",
     age: "",
@@ -15,72 +21,81 @@ const Starter = () => {
     doj: ""
   });
   const [tableData, setTableData] = useState([]);
+useEffect(()=>{
+  const getdata=async()=>{
+    if(currentUser.patients){
+    const p=await getPatientsByIds(currentUser.patients)
+    
+    setPatients(p)
+    }
+  }
+  getdata()
+},[])
+  // useEffect(() => {
+  //   // Fetch data from Firestore on component mount
+  //   const fetchData = async () => {
+  //     const querySnapshot = await getDocs(collection(db, 'patientinfo'));
+  //     const data = querySnapshot.docs.map((doc, index) => ({
+  //       ...doc.data(),
+  //       id: doc.id,
+  //       num: index + 1
+  //     }));
 
-  useEffect(() => {
-    // Fetch data from Firestore on component mount
-    const fetchData = async () => {
-      const querySnapshot = await getDocs(collection(db, 'patientinfo'));
-      const data = querySnapshot.docs.map((doc, index) => ({
-        ...doc.data(),
-        id: doc.id,
-        num: index + 1
-      }));
+  //     if (data.length === 0) {
+  //       const initialData = [
+  //         {
+  //           name: "Anurag Tiwari",
+  //           age: "25",
+  //           parentsName: "Mr. Tiwari",
+  //           parentsMobile: "1234567890",
+  //           dob: "1995-01-01",
+  //           doj: "2020-01-01"
+  //         },
+  //         {
+  //           name: "Ekansh Agarwal",
+  //           age: "25",
+  //           parentsName: "Mr. Agarwal",
+  //           parentsMobile: "1234567890",
+  //           dob: "1995-01-01",
+  //           doj: "2020-01-01"
+  //         },
+  //         {
+  //           name: "Tejas Kumar",
+  //           age: "25",
+  //           parentsName: "Mr. Kumar",
+  //           parentsMobile: "1234567890",
+  //           dob: "1995-01-01",
+  //           doj: "2020-01-01"
+  //         },
+  //         {
+  //           name: "Ujjwal Mathur",
+  //           age: "25",
+  //           parentsName: "Mr. Tiwari",
+  //           parentsMobile: "1234567890",
+  //           dob: "1995-01-01",
+  //           doj: "2020-01-01"
+  //         }
+  //       ];
 
-      if (data.length === 0) {
-        const initialData = [
-          {
-            name: "Anurag Tiwari",
-            age: "25",
-            parentsName: "Mr. Tiwari",
-            parentsMobile: "1234567890",
-            dob: "1995-01-01",
-            doj: "2020-01-01"
-          },
-          {
-            name: "Ekansh Agarwal",
-            age: "25",
-            parentsName: "Mr. Agarwal",
-            parentsMobile: "1234567890",
-            dob: "1995-01-01",
-            doj: "2020-01-01"
-          },
-          {
-            name: "Tejas Kumar",
-            age: "25",
-            parentsName: "Mr. Kumar",
-            parentsMobile: "1234567890",
-            dob: "1995-01-01",
-            doj: "2020-01-01"
-          },
-          {
-            name: "Ujjwal Mathur",
-            age: "25",
-            parentsName: "Mr. Tiwari",
-            parentsMobile: "1234567890",
-            dob: "1995-01-01",
-            doj: "2020-01-01"
-          }
-        ];
+  //       const batch = writeBatch(db);
+  //       initialData.forEach((data) => {
+  //         const docRef = doc(collection(db, 'patientinfo'));
+  //         batch.set(docRef, data);
+  //       });
+  //       await batch.commit();
 
-        const batch = writeBatch(db);
-        initialData.forEach((data) => {
-          const docRef = doc(collection(db, 'patientinfo'));
-          batch.set(docRef, data);
-        });
-        await batch.commit();
-
-        const newData = initialData.map((data, index) => ({
-          ...data,
-          id: data.id,
-          num: index + 1
-        }));
-        setTableData(newData);
-      } else {
-        setTableData(data);
-      }
-    };
-    fetchData();
-  }, []);
+  //       const newData = initialData.map((data, index) => ({
+  //         ...data,
+  //         id: data.id,
+  //         num: index + 1
+  //       }));
+  //       setTableData(newData);
+  //     } else {
+  //       setTableData(data);
+  //     }
+  //   };
+  //   fetchData();
+  // }, []);
 
   const toggleModal = () => {
     setModal(!modal);
@@ -122,7 +137,7 @@ const Starter = () => {
           </Button>
         </Col>
         <Col lg="12">
-          <ProjectTables data={tableData} />
+          <ProjectTables data={patients} />
         </Col>
       </Row>
 
