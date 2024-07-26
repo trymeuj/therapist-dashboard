@@ -1,3 +1,5 @@
+
+
 import React, { useEffect, useState } from "react";
 import {
   Container,
@@ -6,29 +8,53 @@ import {
   Button,
   CardTitle,
   CardText,
+  Spinner,
 } from "reactstrap";
 import ProjectTables from "../../components/dashboard/ProjectTable";
 import { useAuth } from "../../AuthContext";
-import { getPatientsByIds } from "../../database/methods";
+import { findTherapistById, getPatientsByIds } from "../../database/methods";
+import { useParams } from "react-router-dom";
 
-const TherapistProfile = () => {
+const GeneralTherapistProfile = () => {
+    const { id } = useParams();
+    const [loading, setLoading] = useState(true);
+    const [profileData,setTherapist]=useState({})
+    useEffect(() => {
+      const fetchTherapist = async () => {
+        let p=  await findTherapistById(id)
+        setTherapist(p);
+        setLoading(false);
+      }
+      fetchTherapist();
+    }, []);
+
   const [showMoreDetails, setShowMoreDetails] = useState(false);
   const {currentUser}=useAuth()
   const [patients,setPatients]=useState([])
-  const [profileData,setTherapist]=useState({})
   useEffect(()=>{
     const getdata=async()=>{
-      if(currentUser.patients){
-      const p=await getPatientsByIds(currentUser.patients)
+      if(profileData.patients){
+      const p=await getPatientsByIds(profileData.patients)
       
       setPatients(p)
       }
     }
     getdata()
-  },[])
-  useEffect(()=>{
-    setTherapist({...currentUser,image:"https://via.placeholder.com/150"})
-  },[])
+  },[profileData])
+
+//   useEffect(()=>{
+//     const getdata=async()=>{
+//       if(currentUser.patients){
+//       const p=await getPatientsByIds(currentUser.patients)
+      
+//       setPatients(p)
+//       }
+//     }
+//     getdata()
+//   },[])
+//   useEffect(()=>{
+//     setTherapist({...currentUser,image:"https://via.placeholder.com/150"})
+//   },[])
   
   const toggleDetails = () => {
     setShowMoreDetails(!showMoreDetails);
@@ -62,13 +88,13 @@ const TherapistProfile = () => {
 
   return (
     <Container>
-      <Row className="justify-content-center">
+     {loading?<Spinner/>: <Row className="justify-content-center">
         <Col md="8">
           <Row className="align-items-center mb-4">
             <Col md="4" className="text-center">
               <div style={{ position: "sticky", top: "20px" }}>
                 <img
-                  src={profileData?profileData.image:""}
+                  src={profileData.profile?profileData.profile:"/user.avif"}
                   alt="Profile"
                   className="img-fluid"
                 />
@@ -123,9 +149,9 @@ const TherapistProfile = () => {
             </Col>
           </Row>
         </Col>
-      </Row>
+      </Row>}
     </Container>
   );
 };
 
-export default TherapistProfile;
+export default GeneralTherapistProfile;

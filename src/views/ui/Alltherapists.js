@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Container, Row, Col, Button, Card, CardBody, Table, Modal, ModalHeader, ModalBody, FormGroup, Label, Input } from "reactstrap";
+import { Container, Row, Col, Button, Card, CardBody, Table, Modal, ModalHeader, ModalBody, FormGroup, Label, Input, Form, ModalFooter } from "reactstrap";
 import { useNavigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { getTherapistsOfTherapyCenter } from "../../database/methods";
@@ -22,6 +22,8 @@ const AllTherapists = () => {
   const [filterModal, setFilterModal] = useState(false);
   const [therapists,setTherapists]=useState([]) 
   const navigate = useNavigate();
+  const [therapistModal, setTherapistModal] = useState(false);
+  const [email,setEmail]=useState('')
 
   const toggleFilterModal = () => setFilterModal(!filterModal);
 
@@ -50,11 +52,17 @@ const AllTherapists = () => {
           <h3>All Therapists</h3>
         </Col>
       </Row>
+
       <Row className="mb-3">
         <Col className="d-flex justify-content-start">
           <Button color="primary" onClick={toggleFilterModal}>Filter</Button>
         </Col>
+        
+      <Col className="d-flex justify-content-end">
+          <Button color="primary" onClick={()=> setTherapistModal(!therapistModal)}>Add Therapist</Button>
+        </Col>
       </Row>
+      
       <Row>
         <Col>
           <Card>
@@ -83,7 +91,7 @@ const AllTherapists = () => {
                       </td>
                      
                       <td>
-                        <Button color="primary" onClick={() => handleSeeProfile(doctor.id)}>
+                        <Button color="primary" onClick={() => handleSeeProfile(doctor.uid)}>
                           See Profile
                         </Button>
                       </td>
@@ -96,6 +104,26 @@ const AllTherapists = () => {
         </Col>
       </Row>
 
+      <Modal isOpen={therapistModal} toggle={()=>setTherapistModal(!therapistModal)}>
+        <ModalHeader toggle={()=>setTherapistModal(!therapistModal)}>Add New Therapist</ModalHeader>
+        <ModalBody>
+          <Form>
+            
+            <FormGroup>
+              <Label for="doj">Email</Label>
+              <Input type="email" name="email" id="email" value={email} onChange={(e)=>setEmail(e.target.value)} />
+            </FormGroup>
+          </Form>
+        </ModalBody>
+        <ModalFooter>
+          
+          <Button color="secondary" onClick={()=>{
+            setTherapistModal(false)
+          }}>
+            Send Invite
+          </Button>
+        </ModalFooter>
+      </Modal>
       {/* Filter Modal */}
       <Modal isOpen={filterModal} toggle={toggleFilterModal} backdropClassName="modal-backdrop-blur">
         <ModalHeader toggle={toggleFilterModal}>Filter</ModalHeader>

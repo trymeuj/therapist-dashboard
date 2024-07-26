@@ -8,12 +8,25 @@ import {
   MDBCardBody,
   MDBCardImage,
 } from "mdb-react-ui-kit";
-import { Button, Col, Row, Table, Card, CardTitle, CardBody } from "reactstrap";
-import { useNavigate } from "react-router-dom";
+import { Button, Col, Row, Table, Card, CardTitle, CardBody, Spinner } from "reactstrap";
+import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import userpic from "./my_pic.jpg";
+import { getPatientById } from "../../database/methods";
+import { set } from "firebase/database";
 
 const ProfilePage = () => {
+  const { id } = useParams();
+  const [loading, setLoading] = useState(true);
+  const [patient, setPatient] = useState({});
+  useEffect(() => {
+    const fetchPatient = async () => {
+      let p=  await getPatientById(id)
+      setPatient(p);
+      setLoading(false);
+    }
+    fetchPatient();
+  }, []);
   const [showHomeworkTable, setShowHomeworkTable] = useState(false);
   const [showReportTables, setShowReportTables] = useState(false);
   const [showFullProfile, setShowFullProfile] = useState(false);
@@ -26,9 +39,9 @@ const ProfilePage = () => {
     { id: 6, firstName: "Bob", lastName: "Johnson", username: "@bjohnson" },
   ]);
 
-  useEffect(() => {
-    fetchHomeworkData();
-  }, []);
+  // useEffect(() => {
+  //   fetchHomeworkData();
+  // }, []);
 
   const fetchHomeworkData = async () => {
     const sheetId = "1R1JKBYO9rSCn-2fNTdXPYe2_MNhNCc6Jhj6rDhE5az8";
@@ -76,20 +89,22 @@ const ProfilePage = () => {
 
   return (
     <section style={{ backgroundColor: "#eee" }}>
-      <MDBContainer className="py-5">
+      {loading?
+      <Spinner color="primary"/>
+      : <MDBContainer className="py-5">
         <MDBRow>
           <MDBCol lg="4">
             <MDBCard className="mb-4">
               <MDBCardBody className="text-center">
                 <MDBCardImage
-                  src={userpic}
+                  src={patient.profile ?patient.profile: "/user.avif"}
                   alt="avatar"
                   className="rounded-circle"
                   style={{ width: "150px" }}
                   fluid
                 />
-                <p className="text-muted mb-1">Ujjwal Mathur</p>
-                <p className="text-muted mb-4">IIT Delhi, Hauz Khas, New Delhi</p>
+                <p className="text-muted mb-1">{patient.name}</p>
+                <p className="text-muted mb-4">{patient.address}</p>
                 <div className="d-flex justify-content-center mb-2">
                   <Button color="primary" style={{ marginTop: "20px" }} onClick={toggleFullProfile}>
                     {showFullProfile ? "Hide Profile" : "See full Profile"}
@@ -97,12 +112,12 @@ const ProfilePage = () => {
                 </div>
                 {showFullProfile && (
                   <div className="mt-4">
-                    <MDBCardText><strong>Started Therapy: </strong> 01/01/2022</MDBCardText>
-                    <MDBCardText><strong>Date of Birth: </strong> 05/05/1990</MDBCardText>
-                    <MDBCardText><strong>Parents' Names: </strong> John Doe, Jane Doe</MDBCardText>
-                    <MDBCardText><strong>Parents' Phone Number: </strong> (123) 456-7890</MDBCardText>
-                    <MDBCardText><strong>Address: </strong> 123 Main St, San Francisco, CA</MDBCardText>
-                    <MDBCardText><strong>Remarks: </strong> Excellent progress over the past months.</MDBCardText>
+                    <MDBCardText><strong>Started Therapy: </strong>{patient.doj}</MDBCardText>
+                    <MDBCardText><strong>Date of Birth: </strong> {patient.dob}</MDBCardText>
+                    <MDBCardText><strong>Parents' Names: </strong> {patient.parentNames}</MDBCardText>
+                    <MDBCardText><strong>Parents' Phone Number: </strong>{patient.parentPhone}</MDBCardText>
+                    <MDBCardText><strong>Address: </strong>{patient.address}</MDBCardText>
+                    <MDBCardText><strong>Remarks: </strong>{patient.remarks}</MDBCardText>
                   </div>
                 )}
               </MDBCardBody>
@@ -395,7 +410,7 @@ const ProfilePage = () => {
             </CardBody>
           </Card>
         </Col>
-      </MDBContainer>
+      </MDBContainer>}
     </section>
   );
 };

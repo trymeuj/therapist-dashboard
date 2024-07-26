@@ -198,7 +198,7 @@ export async function getPatientsOfTherapist(therapistId){
 
 export async function assignBatch(id,batch){
     try {
-        const docRef = doc(db, collection, id);
+        const docRef = doc(db, "patientinfo", id);
         await updateDoc(docRef, {
           "batch": batch
         });
@@ -259,11 +259,32 @@ export async function configureBatch(batch,therapistId,days,time){
 
       if(batches[batch]){
         
-        batches[batch] = { ...batches[batch],days,time };
+        batches[batch] = { ...batches[batch],days,time:time?time:[] };
       }else{
         batches[batch]={days,time}
       }
       
+      await updateDoc(docRef, { batches });
+
+      
+    } else {
+      console.log("No such document!");
+    }
+
+      } catch (error) {
+        console.error("Error updating document: ", error);
+      }
+}
+
+export async function addNewBatch(batch,therapistId){
+    try {
+        const docRef = doc(db, 'therapists', therapistId);
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+      const data = docSnap.data();
+      let batches = data.batches || {};
+      batches[batch]={days:[],time:[]}
       await updateDoc(docRef, { batches });
 
       

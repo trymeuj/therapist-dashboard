@@ -3,6 +3,7 @@ import { Navigate } from "react-router-dom";
 import LoginForm from "../views/ui/Cards";
 import SignupForm from "../views/ui/Signup.js";
 import ProtectedRoute from "../protectedRoute.js";
+import GeneralTherapistProfile from "../views/ui/therapistProf.js";
 
 /****Layouts*****/
 const FullLayout = lazy(() => import("../layouts/FullLayout.js"));
@@ -44,7 +45,8 @@ const ThemeRoutes = [
       { path: 'table', element: <ProtectedRoute element={Tables} /> },
       { path: 'forms', element: <ProtectedRoute element={Forms} /> },
       { path: 'breadcrumbs', element: <ProtectedRoute element={Breadcrumbs} /> },
-      { path: 'userprofile', element: <ProtectedRoute element={ProfilePage} /> },
+      { path: 'userprofile/:id', element: <ProtectedRoute element={ProfilePage} /> },
+      { path: 'therapist/:id', element: <ProtectedRoute element={GeneralTherapistProfile} /> },
       { path: 'signup', element: <SignupForm /> },
       { path: 'alltherapists', element: <ProtectedRoute element={AllTherapists} /> },
       { path: 'allpatients', element: <ProtectedRoute element={AllPatients} /> },
